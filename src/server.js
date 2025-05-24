@@ -23,13 +23,20 @@ const server = http.createServer( async (req, res) => {
         .end(JSON.stringify(users))
     }
 
-    if (method === "POST" && url === '/users') {
-        const { name, email } = req.body
+        if (method === "POST" && url === '/users') {
+        if (!req.body) {
+            return res
+                .writeHead(400)
+                .end(JSON.stringify({ error: 'Corpo da requisição inválido ou ausente' }))
+        }
+
+        const { name, email, endereco } = req.body
 
         users.push({
-            id: 1,
+            id: users.length + 1,
             name,
             email,
+            endereco,
         })
 
         return res.writeHead(201).end()
